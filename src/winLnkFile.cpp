@@ -34,6 +34,8 @@ int winLnkFile::load() {
 }
 
 int winLnkFile::loadFileHeader() {
+	DEBUG_INFO("winLnkFile::loadFileHeader()...");
+
 	int rv = -1;
 	if (isOpen()) {
 		if (getData(&m_lnkFileHeader, LNKFILE_HEADER_LENGTH, 0) >= 0) {
@@ -54,7 +56,7 @@ int winLnkFile::loadFileHeader() {
 			if (m_lnkFileHeader.dwHeaderID == LNKFILE_HEADER_ID) {
 				rv = 0;
 			} else {
-				DEBUG_ERROR("winLnkFile::loadFileHeader() Invalid header ID.");
+				DEBUG_ERROR("winLnkFile::loadFileHeader() Invalid header ID:" << m_lnkFileHeader.dwHeaderID);
 			}
 		} else {
 			DEBUG_ERROR("winLnkFile::loadFileHeader() Failure reading data.");
@@ -66,6 +68,8 @@ int winLnkFile::loadFileHeader() {
 }
 
 int winLnkFile::loadShellItemList() {
+	DEBUG_INFO("winLnkFile::loadShellItemList()...");
+
 	int rv = -1;
 	if (isOpen()) {
 		if (getData(&m_shellItemList, SHELL_ITEM_LIST_LENGTH, LNKFILE_HEADER_LENGTH, NULL) >= 0) {
@@ -81,6 +85,8 @@ int winLnkFile::loadShellItemList() {
 }
 
 int winLnkFile::loadFileLocationInfo() {
+	DEBUG_INFO("winLnkFile::loadFileLocationInfo()...");
+
 	int rv = -1;
 	if (isOpen()) {
 		m_ulFileLocationOffset = LNKFILE_HEADER_LENGTH + SHELL_ITEM_LIST_LENGTH + m_shellItemList.wListLength;
@@ -149,6 +155,8 @@ int winLnkFile::loadFileLocationInfo() {
 }
 
 int winLnkFile::loadStrings() {
+	DEBUG_INFO("winLnkFile::loadStrings()...");
+
 	int rv = -1;
 
 	if (seek(m_ulFileLocationOffset + m_fileLocationInfo.dwLength) >= 0) {

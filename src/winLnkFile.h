@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//#define _DEBUG_
+
 #ifndef _WINLNKFILE_H_
 #define _WINLNKFILE_H_
 
