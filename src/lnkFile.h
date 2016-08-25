@@ -49,9 +49,9 @@ typedef struct _LNKFILE_HEADER {
 	GUID	lnkGUID;
 	DWORD	dwFlags;
 	DWORD	dwFileAttr;
-	QWORD	qwCreatedTime;
-	QWORD	qwAccessedTime;
-	QWORD	qwModifiedTime;
+	QWORD	qwCreatedTime;		//FILETIME (Since January 1, 1601)
+	QWORD	qwAccessedTime;	//FILETIME (Since January 1, 1601)
+	QWORD	qwModifiedTime;	//FILETIME (Since January 1, 1601)
 	DWORD	dwFileLength;
 	DWORD	dwCustomIconIndex;
 	DWORD	dwShowWndValue;
