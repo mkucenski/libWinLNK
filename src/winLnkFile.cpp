@@ -39,19 +39,19 @@ int winLnkFile::loadFileHeader() {
 	int rv = -1;
 	if (isOpen()) {
 		if (getData(&m_lnkFileHeader, LNKFILE_HEADER_LENGTH, 0) >= 0) {
-			BIGTOHOST32(m_lnkFileHeader.dwCustomIconIndex);
-			BIGTOHOST32(m_lnkFileHeader.dwFileAttr);
-			BIGTOHOST32(m_lnkFileHeader.dwFileLength);
-			BIGTOHOST32(m_lnkFileHeader.dwFlags);
-			BIGTOHOST32(m_lnkFileHeader.dwHeaderID);
-			BIGTOHOST32(m_lnkFileHeader.dwHotKey);
-			BIGTOHOST32(m_lnkFileHeader.dwShowWndValue);
-			BIGTOHOST64(m_lnkFileHeader.qwAccessedTime);
-			BIGTOHOST64(m_lnkFileHeader.qwCreatedTime);
-			BIGTOHOST64(m_lnkFileHeader.qwModifiedTime);
-			BIGTOHOST32(m_lnkFileHeader.lnkGUID.dwData1);
-			BIGTOHOST16(m_lnkFileHeader.lnkGUID.wData2);
-			BIGTOHOST16(m_lnkFileHeader.lnkGUID.wData3);
+			LITTLETOHOST32(m_lnkFileHeader.dwCustomIconIndex);
+			LITTLETOHOST32(m_lnkFileHeader.dwFileAttr);
+			LITTLETOHOST32(m_lnkFileHeader.dwFileLength);
+			LITTLETOHOST32(m_lnkFileHeader.dwFlags);
+			LITTLETOHOST32(m_lnkFileHeader.dwHeaderID);
+			LITTLETOHOST32(m_lnkFileHeader.dwHotKey);
+			LITTLETOHOST32(m_lnkFileHeader.dwShowWndValue);
+			LITTLETOHOST64(m_lnkFileHeader.qwAccessedTime);
+			LITTLETOHOST64(m_lnkFileHeader.qwCreatedTime);
+			LITTLETOHOST64(m_lnkFileHeader.qwModifiedTime);
+			LITTLETOHOST32(m_lnkFileHeader.lnkGUID.dwData1);
+			LITTLETOHOST16(m_lnkFileHeader.lnkGUID.wData2);
+			LITTLETOHOST16(m_lnkFileHeader.lnkGUID.wData3);
 			
 			if (m_lnkFileHeader.dwHeaderID == LNKFILE_HEADER_ID) {
 				rv = 0;
@@ -73,7 +73,7 @@ int winLnkFile::loadShellItemList() {
 	int rv = -1;
 	if (isOpen()) {
 		if (getData(&m_shellItemList, SHELL_ITEM_LIST_LENGTH, LNKFILE_HEADER_LENGTH, NULL) >= 0) {
-			BIGTOHOST16(m_shellItemList.wListLength);
+			LITTLETOHOST16(m_shellItemList.wListLength);
 			rv = 0;
 		} else {
 			DEBUG_ERROR("winLnkFile::loadShellItemList() Failure reading data.");
@@ -91,13 +91,13 @@ int winLnkFile::loadFileLocationInfo() {
 	if (isOpen()) {
 		m_ulFileLocationOffset = LNKFILE_HEADER_LENGTH + SHELL_ITEM_LIST_LENGTH + m_shellItemList.wListLength;
 		if (getData(&m_fileLocationInfo, FILE_LOC_INFO_LENGTH, m_ulFileLocationOffset, NULL) >= 0) {
-			BIGTOHOST32(m_fileLocationInfo.dwBasePathnameOffset);
-			BIGTOHOST32(m_fileLocationInfo.dwFlags);
-			BIGTOHOST32(m_fileLocationInfo.dwLength);
-			BIGTOHOST32(m_fileLocationInfo.dwLocalVolumeInfoOffset);
-			BIGTOHOST32(m_fileLocationInfo.dwNetworkVolumeInfoOffset);
-			BIGTOHOST32(m_fileLocationInfo.dwNextStructure);
-			BIGTOHOST32(m_fileLocationInfo.dwRemainingPathOffset);
+			LITTLETOHOST32(m_fileLocationInfo.dwBasePathnameOffset);
+			LITTLETOHOST32(m_fileLocationInfo.dwFlags);
+			LITTLETOHOST32(m_fileLocationInfo.dwLength);
+			LITTLETOHOST32(m_fileLocationInfo.dwLocalVolumeInfoOffset);
+			LITTLETOHOST32(m_fileLocationInfo.dwNetworkVolumeInfoOffset);
+			LITTLETOHOST32(m_fileLocationInfo.dwNextStructure);
+			LITTLETOHOST32(m_fileLocationInfo.dwRemainingPathOffset);
 			
 			DEBUG_INFO("winLnkFile::loadFileLocationInfo() File location info offset " << m_ulFileLocationOffset << ", length " << m_fileLocationInfo.dwLength);
 			rv = 0;
@@ -117,10 +117,10 @@ int winLnkFile::loadFileLocationInfo() {
 			if (m_fileLocationInfo.dwLocalVolumeInfoOffset > 0) {
 				DEBUG_INFO("winLnkFile::loadFileLocationInfo() Reading local volume info");
 				if (getData(&m_localVolumeInfo, LOCAL_VOL_INFO_LENGTH, m_ulFileLocationOffset + m_fileLocationInfo.dwLocalVolumeInfoOffset, NULL) >= 0) {
-					BIGTOHOST32(m_localVolumeInfo.dwLength);
-					BIGTOHOST32(m_localVolumeInfo.dwNameOffset);
-					BIGTOHOST32(m_localVolumeInfo.dwSerialNumber);
-					BIGTOHOST32(m_localVolumeInfo.dwType);
+					LITTLETOHOST32(m_localVolumeInfo.dwLength);
+					LITTLETOHOST32(m_localVolumeInfo.dwNameOffset);
+					LITTLETOHOST32(m_localVolumeInfo.dwSerialNumber);
+					LITTLETOHOST32(m_localVolumeInfo.dwType);
 					
 					DEBUG_INFO("winLnkFile::loadFileLocationInfo() Reading local volume name");
 					if (getString(&m_strVolumeLabel, m_ulFileLocationOffset + m_fileLocationInfo.dwLocalVolumeInfoOffset + m_localVolumeInfo.dwNameOffset, 0) < 0) {
@@ -134,8 +134,8 @@ int winLnkFile::loadFileLocationInfo() {
 			if (m_fileLocationInfo.dwNetworkVolumeInfoOffset > 0) {
 				DEBUG_INFO("winLnkFile::loadFileLocationInfo() Reading network volume info");
 				if (getData(&m_networkVolumeInfo, NETWORK_VOL_INFO_LENGTH, m_ulFileLocationOffset + m_fileLocationInfo.dwNetworkVolumeInfoOffset, NULL) >= 0) {
-					BIGTOHOST32(m_networkVolumeInfo.dwLength);
-					BIGTOHOST32(m_networkVolumeInfo.dwShareNameOffset);
+					LITTLETOHOST32(m_networkVolumeInfo.dwLength);
+					LITTLETOHOST32(m_networkVolumeInfo.dwShareNameOffset);
 					
 					DEBUG_INFO("winLnkFile::loadFileLocationInfo() Reading network share name");
 					if (getString(&m_strNetworkShare, m_ulFileLocationOffset + m_fileLocationInfo.dwNetworkVolumeInfoOffset + m_networkVolumeInfo.dwShareNameOffset, 0) < 0) {
@@ -167,7 +167,7 @@ int winLnkFile::loadStrings() {
 		if (hasDescription()) {
 			DEBUG_INFO("winLnkFile::loadStrings() Reading description");
 			if (getData(&stringStruct, LNK_STRING_LENGTH, NULL) >= 0) {
-				BIGTOHOST16(stringStruct.wStringLength);
+				LITTLETOHOST16(stringStruct.wStringLength);
 				
 				if (getTwoByteCharString(&m_strDescription, stringStruct.wStringLength, true) >= 0) {
 					DEBUG_INFO("winLnkFile::loadStrings() Read description of length " << stringStruct.wStringLength);
@@ -184,7 +184,7 @@ int winLnkFile::loadStrings() {
 		if (hasRelativePath()) {
 			DEBUG_INFO("winLnkFile::loadStrings() Reading relative path");
 			if (getData(&stringStruct, LNK_STRING_LENGTH, NULL) >= 0) {
-				BIGTOHOST16(stringStruct.wStringLength);
+				LITTLETOHOST16(stringStruct.wStringLength);
 				
 				if (getTwoByteCharString(&m_strRelativePath, stringStruct.wStringLength, true) >= 0) {
 				} else {
@@ -200,7 +200,7 @@ int winLnkFile::loadStrings() {
 		if (hasWorkingDir()) {
 			DEBUG_INFO("winLnkFile::loadStrings() Reading working dir");
 			if (getData(&stringStruct, LNK_STRING_LENGTH, NULL) >= 0) {
-				BIGTOHOST16(stringStruct.wStringLength);
+				LITTLETOHOST16(stringStruct.wStringLength);
 				
 				if (getTwoByteCharString(&m_strWorkingDir, stringStruct.wStringLength, true) >= 0) {
 				} else {
@@ -216,7 +216,7 @@ int winLnkFile::loadStrings() {
 		if (hasCommandLineArgs()) {
 			DEBUG_INFO("winLnkFile::loadStrings() Reading command line args");
 			if (getData(&stringStruct, LNK_STRING_LENGTH, NULL) >= 0) {
-				BIGTOHOST16(stringStruct.wStringLength);
+				LITTLETOHOST16(stringStruct.wStringLength);
 				
 				if (getTwoByteCharString(&m_strCommandLine, stringStruct.wStringLength, true) >= 0) {
 				} else {
@@ -232,7 +232,7 @@ int winLnkFile::loadStrings() {
 		if (hasCustomIcon()) {
 			DEBUG_INFO("winLnkFile::loadStrings() Reading custom icon");
 			if (getData(&stringStruct, LNK_STRING_LENGTH, NULL) >= 0) {
-				BIGTOHOST16(stringStruct.wStringLength);
+				LITTLETOHOST16(stringStruct.wStringLength);
 				
 				if (getTwoByteCharString(&m_strIconFilename, stringStruct.wStringLength, true) >= 0) {
 				} else {
