@@ -19,8 +19,6 @@
 
 #include "lnkFile.h"
 #include "libbinData/src/binDataFile.h"
-#include "misc/stringType.h"
-
 #include <string>
 #include <fstream>
 using namespace std;
@@ -69,11 +67,11 @@ class winLnkFile : public binDataFile {
 		string getLocalVolumeName() { return m_strVolumeLabel; };
 		string getNetworkShare() { return m_strNetworkShare; };
 		
-		string_t getDescription() { return m_strDescription; };
-		string_t getRelativePath() { return m_strRelativePath; };
-		string_t getWorkingDir() { return m_strWorkingDir; };
-		string_t getCommandLine() { return m_strCommandLine; };
-		string_t getIconFilename() { return m_strIconFilename; };
+		string getDescription() { return m_strDescription; };
+		string getRelativePath() { return m_strRelativePath; };
+		string getWorkingDir() { return m_strWorkingDir; };
+		string getCommandLine() { return m_strCommandLine; };
+		string getIconFilename() { return m_strIconFilename; };
 
 	private:
 		int loadFileHeader();
@@ -93,11 +91,11 @@ class winLnkFile : public binDataFile {
 		string m_strNetworkShare;
 
 		int loadStrings();
-		string_t m_strDescription;
-		string_t m_strRelativePath;
-		string_t m_strWorkingDir;
-		string_t m_strCommandLine;
-		string_t m_strIconFilename;
+		string m_strDescription;
+		string m_strRelativePath;
+		string m_strWorkingDir;
+		string m_strCommandLine;
+		string m_strIconFilename;
 
 		bool hasDescription() { return (m_lnkFileHeader.dwFlags & LNKFLAGS_DESCRIPTION_MASK) > 0; };
 		bool hasRelativePath() { return (m_lnkFileHeader.dwFlags & LNKFLAGS_RELATIVEPATH_MASK) > 0; };

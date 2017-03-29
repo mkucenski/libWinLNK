@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "winLnkFile.h"
-
 #include "misc/debugMsgs.h"
 #include "misc/endianSwitch.h"
 
@@ -159,7 +158,7 @@ int winLnkFile::loadStrings() {
 
 	int rv = -1;
 
-	if (seek(m_ulFileLocationOffset + m_fileLocationInfo.dwLength) >= 0) {
+	if (movePos(m_ulFileLocationOffset + m_fileLocationInfo.dwLength) >= 0) {
 		rv = 0;
 		
 		LNK_STRING stringStruct;
